@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>rollover</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+	<script src="../src/jquery.yuga_rollover.js"></script>
+	<link rel="stylesheet" href="css/noimg.css">
+</head>
+<body>
+<div class="mod-all">
+	<h1 class="mod-h">rollover</h1>
+	<div id="sample1">
+		<h2 class="mod-h2">シンプル</h2>
+		<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+	<!-- /#sample1 --></div>
+	<div id="sample2">
+		<h2 class="mod-h2">リンク img + text</h2>
+		<a href="#">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+			リンク
+		</a>
+	<!-- /#sample2 --></div>
+	<div id="sample3">
+		<h2 class="mod-h2">複数img</h2>
+		<a href="#">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+		</a>
+	<!-- /#sample3 --></div>
+	<div id="sample4">
+		<h2 class="mod-h2">sufix変更</h2>
+		<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+	<!-- /#sample4 --></div>
+	<div id="sample5">
+		<h2 class="mod-h2">group変更</h2>
+		<div class="group" style="border:1px dotted #ccc;">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample">
+			<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+		</div>
+	<!-- /#sample3 --></div>
+<!-- /.mod-all --></div>
+<script>
+$('#sample1 .roll').yuga_rollover();
+$('#sample2 .roll').yuga_rollover();
+$('#sample3 .roll').yuga_rollover();
+$('#sample4 .roll').yuga_rollover({
+	suffix: '_cr'
+});
+$('#sample5 .roll').yuga_rollover({
+	group: '.group'
+});
+</script>
+</body>
+</html>
+
+
+
+
