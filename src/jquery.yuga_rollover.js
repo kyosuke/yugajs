@@ -21,9 +21,9 @@
 
 			preloadImg(src_o);
 
-			target.hover(function(){
+			target.bind('mouseenter.yuga_rollover', function(){
 				img.attr('src', src_o);
-			},function(){
+			}).bind('mouseleave.yuga_rollover', function(){
 				img.attr('src', src);
 			});
 		});

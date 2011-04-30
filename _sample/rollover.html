@@ -40,7 +40,11 @@
 			<img src="img/btn.png" width="100" height="30" alt="roll sample">
 			<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
 		</div>
-	<!-- /#sample3 --></div>
+	<!-- /#sample5 --></div>
+	<div id="sample6">
+		<h2 class="mod-h2">設定解除</h2>
+		<img src="img/btn.png" width="100" height="30" alt="roll sample" class="roll">
+	<!-- /#sample6 --></div>
 <!-- /.mod-all --></div>
 <script>
 $('#sample1 .roll').yuga_rollover();
@@ -52,6 +56,8 @@ $('#sample4 .roll').yuga_rollover({
 $('#sample5 .roll').yuga_rollover({
 	group: '.group'
 });
+$('#sample6 .roll').yuga_rollover();
+$('#sample6 .roll').unbind('.yuga_rollover');
 </script>
 </body>
 </html>
