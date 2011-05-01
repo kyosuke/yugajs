@@ -1,11 +1,29 @@
+/**
+ * yuga.js jQuery plug-in
+ *
+ * Copyright 2011 PixelGrid, Inc.
+ * Licensed under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ * @version  1.9.0 (2.0 beta version)
+ *
+ */
+
+
 (function($){
 
-	function preloadImg(src){
-		var img = $('<img>', {
-			src: src
-		});
-	}
-
+	$.yuga = {
+		preloadImg: function (src){
+			$('<img>', {
+				src: src
+			});
+		}
+	};
+	
+	
+	/**
+	 * rollover
+	 */
 	$.fn.yuga_rollover = function(options){
 		var conf = $.extend({
 			suffix: '_on',
@@ -19,7 +37,7 @@
 			if (!src) return;
 			var src_o = src.replace(/\.\w+$/, conf.suffix + '$&');
 
-			preloadImg(src_o);
+			$.yuga.preloadImg(src_o);
 
 			target.bind('mouseenter.yuga_rollover', function(){
 				img.attr('src', src_o);
@@ -32,6 +50,3 @@
 		return this;
 	};
 }(jQuery));
-
-
-
