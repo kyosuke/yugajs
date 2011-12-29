@@ -16,6 +16,44 @@ test('isRootRelativePath', function() {
 	ok(!$.yuga.isRootRelativePath('img/sample.jpg'));
 });
 
+test('regexpParse : empty', function(){
+	var obj = $.yuga.regexpParse();
+	ok(obj);
+	equal(obj.all, '');
+});
+
+test('regexpParse', function(){
+	var obj = $.yuga.regexpParse({
+		str: 'http://kyosuke.jp/yugajs/index.html',
+		regexp: /^(\w+):(\/\/)?(.*)/,
+		fields: {
+			'schema': 1,
+			'content': 3
+		}
+	});
+	ok(obj);
+	equal(obj.schema, 'http', 'schema');
+	equal(obj.content, 'kyosuke.jp/yugajs/index.html', 'content');
+
+	$.yuga.regexpParse({
+		str: obj.content,
+		obj: obj,
+		regexp: /^([^\/]+)?([^\?#]+)?\??([^#]+)?#?(\w*)?/,
+		fields: {
+			'authority': 1,
+			'path': 2,
+			'query': 3,
+			'fragment': 4
+		}
+	});
+
+	equal(obj.authority, 'kyosuke.jp', 'authority');
+	equal(obj.path, '/yugajs/index.html', 'path');
+	equal(obj.query, undefined, 'query');
+	equal(obj.fragment, undefined, 'fragment');
+
+});
+
 test('path2obj : http', function() {
 	var uri = $.yuga.path2obj('http://kyosuke.jp/yugajs/index.html#top');
 	ok(uri);

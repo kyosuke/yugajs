@@ -24,72 +24,60 @@
 		isRootRelativePath: function(path) {
 			return path[0] === '/';
 		},
-		uri: function(path, basePath) {
-			var obj, base, newPath;
-			basePath = basePath || location.href;
-			if ($.yuga.isAbsolutePath(path)) {
-				obj = $.yuga.path2obj(path);
-			} else {
-				base = $.yuga.path2obj(basePath);
-				newPath = base.schema + '://';
-				if (base.authority) {
-					newPath += base.authority;
+		regexpParse: function(options) {
+			var conf = $.extend({
+				str: '',
+				obj: {},
+				regexp: /(.*)/,
+				fields: {
+					'all': 0
 				}
-				if ($.yuga.isRootRelativePath(path)) {
-					newPath += path;
-				} else {
-					newPath += base.dir + path;
-				}
-				if (base.query) {
-					newPath += '?' + base.query;
-				}
-				if (base.fragment) {
-					newPath += '#' + base.fragment;
-				}
-				obj = $.yuga.path2obj(newPath);
-			}
-			return obj;
+			}, options);
+			var r = conf.regexp.exec(conf.str);
+			$.each(conf.fields, function(key, val) {
+				conf.obj[key] = r[val];
+			});
+			return conf.obj;
 		},
 		path2obj: function(path){
-			var obj = {};
-			var f1, r1, f2, r2, f3, r3;
-
 			if (!$.yuga.isAbsolutePath(path)) {
 				throw new Error('required absolute path');
 			}
 
-			obj.base = path;
-
-			r1 = (/^(\w+):(\/\/)?(.*)/).exec(path);
-			f1 = {
-				'schema': 1,
-				'content': 3
-			};
-			$.each(f1, function(key, val) {
-				obj[key] = r1[val];
+			var obj = $.yuga.regexpParse({
+				str: path,
+				regexp: /^(\w+):(\/\/)?(.*)/,
+				fields: {
+					'schema': 1,
+					'content': 3
+				}
 			});
 
-			r2 = (/^([^\/]+)?([^\?#]+)?\??([^#]+)?#?(\w*)?/).exec(obj.content);
-			f2 = {
-				'authority': 1,
-				'path': 2,
-				'query': 3,
-				'fragment': 4
-			};
-			$.each(f2, function(key, val) {
-				obj[key] = r2[val];
+			obj.base = path;
+
+			obj = $.yuga.regexpParse({
+				str: obj.content,
+				obj: obj,
+				regexp: /^([^\/]+)?([^\?#]+)?\??([^#]+)?#?(\w*)?/,
+				fields: {
+					'authority': 1,
+					'path': 2,
+					'query': 3,
+					'fragment': 4
+				}
 			});
 
 			if (obj.authority) {
-				r3 = (/((\w+):?(\w+)?@)?([^\/\?:]+):?(\d+)?/).exec(obj.authority);
-				f3 = {
-					'user': 2,
-					'password': 3,
-					'host': 4,
-					'port': 5
-				};
-				$.each(f3, function(key, val) {
-					obj[key] = r3[val];
+				obj = $.yuga.regexpParse({
+					str: obj.authority,
+					obj: obj,
+					regexp: /((\w+):?(\w+)?@)?([^\/\?:]+):?(\d+)?/,
+					fields: {
+						'user': 2,
+						'password': 3,
+						'host': 4,
+						'port': 5
+					}
 				});
 			}
 
@@ -115,6 +103,32 @@
 				});
 			}
 
+			return obj;
+		},
+		uri: function(path, basePath) {
+			var obj, base, newPath;
+			basePath = basePath || location.href;
+			if ($.yuga.isAbsolutePath(path)) {
+				obj = $.yuga.path2obj(path);
+			} else {
+				base = $.yuga.path2obj(basePath);
+				newPath = base.schema + '://';
+				if (base.authority) {
+					newPath += base.authority;
+				}
+				if ($.yuga.isRootRelativePath(path)) {
+					newPath += path;
+				} else {
+					newPath += base.dir + path;
+				}
+				if (base.query) {
+					newPath += '?' + base.query;
+				}
+				if (base.fragment) {
+					newPath += '#' + base.fragment;
+				}
+				obj = $.yuga.path2obj(newPath);
+			}
 			return obj;
 		}
 	};
