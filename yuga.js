@@ -11,7 +11,7 @@
 
 /*
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="js/jquery.yuga.js"></script>
 <script src="js/yuga.js"></script>
 
@@ -20,6 +20,6 @@
 //-----------------------------------------------
 
 jQuery(function($){
-	$('.roll').yuga_rollover();
-	
+	$('img.yuga-roll').yugaRollover();
+	$('a.yuga-nav').yugaSelflink();
 });

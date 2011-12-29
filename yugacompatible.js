@@ -11,7 +11,7 @@
 
 /*
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="js/jquery.yuga.js"></script>
 <script src="js/yugacompatible.js"></script>
 
@@ -21,9 +21,13 @@
 
 jQuery(function($){
 	// rollover
-	$('.btn, .allbtn img').yuga_rollover({
+	$('.btn, .allbtn img').yugaRollover({
 		suffix: '_on',
 		group: '.btngroup'
 	});
 	
+	$('body a').yugaSelflink({
+		suffix: '_cr',
+		selfLinkClass: 'current'
+	});
 });

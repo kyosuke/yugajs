@@ -179,6 +179,65 @@ test('relative path', function(){
 
 });
 
+test('relative path : ./', function(){
+	var relaPath = './img/sample.jpg';
+	var uri = $.yuga.uri(relaPath);
+	var base = $.yuga.uri(location.href);
+
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.dir  + 'img/sample.jpg', 'path');
+	equal(uri.dir, base.dir + 'img/', 'dir');
+	equal(uri.filename, 'sample.jpg', 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, base.fragment, 'fragment');
+
+	console.log('relaPath', uri);
+
+});
+
+test('relative path : ../_test/', function(){
+	var relaPath = '../_test/img/sample.jpg';
+	var uri = $.yuga.uri(relaPath);
+	var base = $.yuga.uri(location.href);
+
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.dir  + 'img/sample.jpg', 'path');
+	equal(uri.dir, base.dir + 'img/', 'dir');
+	equal(uri.filename, 'sample.jpg', 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, base.fragment, 'fragment');
+
+	console.log('relaPath', uri);
+
+});
+test('relative path : ../../yugajs/_test/', function(){
+	var relaPath = '../../yugajs/_test/img/sample.jpg';
+	var uri = $.yuga.uri(relaPath);
+	var base = $.yuga.uri(location.href);
+
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.dir  + 'img/sample.jpg', 'path');
+	equal(uri.dir, base.dir + 'img/', 'dir');
+	equal(uri.filename, 'sample.jpg', 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, base.fragment, 'fragment');
+
+	console.log('relaPath', uri);
+
+});
+
 test('root relative path', function(){
 	var relaPath = '/img/sample.jpg';
 	var uri = $.yuga.uri(relaPath);

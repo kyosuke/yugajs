@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>selflink</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="../jquery.yuga.js"></script>
+	<link rel="stylesheet" href="css/noimg.css">
+	<style>
+		a.current {
+			background-color: #ebb;
+			padding: 0.5em;
+		}
+	</style>
+</head>
+<body>
+<div class="mod-all">
+	<h1 class="mod-h">selflink</h1>
+	<div id="sample1">
+		<h2 class="mod-h2">同じページへのリンクにクラス追加</h2>
+		<a href="selflink.html">selflink.html</a>
+	<!-- /#sample1 --></div>
+	<div id="sample2">
+		<h2 class="mod-h2">同じページへのリンク内に画像があれば_cr追加</h2>
+		<a href="selflink.html">
+			<img src="img/btn.png" width="100" height="30" alt="selflink sample">
+		</a>
+	<!-- /#sample2 --></div>
+	<div id="sample3">
+		<h2 class="mod-h2">ロールオーバーが設定されていればキャンセル</h2>
+		<a href="selflink.html">
+			<img src="img/btn.png" width="100" height="30" alt="selflink sample" class="roll">
+		</a>
+	<!-- /#sample3 --></div>
+	<div id="sample4">
+		<h2 class="mod-h2">sufix変更</h2>
+		<a href="selflink.html">
+			<img src="img/btn.png" width="100" height="30" alt="selflink sample">
+		</a>
+	<!-- /#sample4 --></div>
+	<div id="sample5">
+		<h2 class="mod-h2">同じページへのリンクにクラス追加 ./</h2>
+		<a href="./selflink.html">./selflink.html</a>
+	<!-- /#sample5 --></div>
+	<div id="sample6">
+		<h2 class="mod-h2">同じページへのリンクにクラス追加 ../_sample/</h2>
+		<a href="../_sample/selflink.html">./selflink.html</a>
+	<!-- /#sample6 --></div>
+<!-- /.mod-all --></div>
+<script>
+$('#sample1 a').yugaSelflink();
+$('#sample2 a').yugaSelflink();
+$('#sample3 .roll').yugaRollover();
+$('#sample3 a').yugaSelflink();
+
+$('#sample4 a').yugaSelflink({
+	suffix: '_on'
+});
+$('#sample5 a').yugaSelflink();
+$('#sample6 a').yugaSelflink();
+</script>
+</body>
+</html>
+
+
+
+

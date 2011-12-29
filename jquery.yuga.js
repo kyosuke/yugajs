@@ -43,7 +43,6 @@
 			if (!$.yuga.isAbsolutePath(path)) {
 				throw new Error('required absolute path');
 			}
-
 			var obj = $.yuga.regexpParse({
 				str: path,
 				regexp: /^(\w+):(\/\/)?(.*)/,
@@ -52,9 +51,7 @@
 					'content': 3
 				}
 			});
-
 			obj.base = path;
-
 			obj = $.yuga.regexpParse({
 				str: obj.content,
 				obj: obj,
@@ -66,7 +63,6 @@
 					'fragment': 4
 				}
 			});
-
 			if (obj.authority) {
 				obj = $.yuga.regexpParse({
 					str: obj.authority,
@@ -80,7 +76,6 @@
 					}
 				});
 			}
-
 			if (obj.path) {
 				if (obj.path[obj.path.length - 1] === '/') {
 					obj.dir = obj.path;
@@ -92,7 +87,6 @@
 					}());
 				}
 			}
-
 			if (obj.query) {
 				obj.querys = {};
 				$.each(obj.query.split('&'), function(){
@@ -102,7 +96,6 @@
 					}
 				});
 			}
-
 			return obj;
 		},
 		uri: function(path, basePath) {
@@ -118,6 +111,10 @@
 					newPath += path;
 				} else {
 					newPath += base.dir + path;
+					newPath = newPath.replace(/\/\.\//g, '/');
+					while ((/\/\.\.\//).test(newPath)) {
+						newPath = newPath.replace(/\/[^\/]+\/\.\.\//, '/');
+					}
 				}
 				if (base.query) {
 					newPath += '?' + base.query;
@@ -142,8 +139,8 @@
 		}, options);
 		return this.each(function(){
 			var img = $(this);
-			var a = img.parents(conf.group);
-			var target = (a.length) ? a : img;
+			var group = img.parents(conf.group);
+			var target = (group.length) ? group : img;
 			var src = img.attr('src');
 			if (!src) {
 				return;
@@ -157,6 +154,33 @@
 			}).bind('mouseleave.yugaRollover', function(){
 				img.attr('src', src);
 			});
+		});
+	};
+
+	/**
+	 * selflink
+	 */
+	$.fn.yugaSelflink = function(options) {
+		var conf = $.extend({
+			suffix: '_cr',
+			selfLinkClass: 'current'
+		}, options);
+		return this.each(function() {
+			var a = $(this);
+			var href = $.yuga.uri(a.attr('href'));
+			console.log(href);
+			var img = a.find('img');
+			if (img.length) {
+				img.each(function(){			
+					var src = $(this).attr('src');
+					var src_c = src.replace(/\.\w+$/, conf.suffix + '$&');
+					$(this).attr('src', src_c);
+				});
+				a.unbind('.yugaRollover');
+			}
+			if (href.base === location.href) {
+				a.addClass(conf.selfLinkClass);
+			}
 		});
 	};
 
