@@ -13,10 +13,109 @@
 (function($){
 
 	$.yuga = {
-		preloadImg: function (src){
+		preloadImg: function(src) {
 			$('<img>', {
 				src: src
 			});
+		},
+		isAbsolutePath: function(path) {
+			return (/^(\w+):/).test(path);
+		},
+		isRootRelativePath: function(path) {
+			return path[0] === '/';
+		},
+		uri: function(path, basePath) {
+			var obj, base, newPath;
+			basePath = basePath || location.href;
+			if ($.yuga.isAbsolutePath(path)) {
+				obj = $.yuga.path2obj(path);
+			} else {
+				base = $.yuga.path2obj(basePath);
+				newPath = base.schema + '://';
+				if (base.authority) {
+					newPath += base.authority;
+				}
+				if ($.yuga.isRootRelativePath(path)) {
+					newPath += path;
+				} else {
+					newPath += base.dir + path;
+				}
+				if (base.query) {
+					newPath += '?' + base.query;
+				}
+				if (base.fragment) {
+					newPath += '#' + base.fragment;
+				}
+				obj = $.yuga.path2obj(newPath);
+			}
+			return obj;
+		},
+		path2obj: function(path){
+			var obj = {};
+			var f1, r1, f2, r2, f3, r3;
+
+			if (!$.yuga.isAbsolutePath(path)) {
+				throw new Error('required absolute path');
+			}
+
+			obj.base = path;
+
+			r1 = (/^(\w+):(\/\/)?(.*)/).exec(path);
+			f1 = {
+				'schema': 1,
+				'content': 3
+			};
+			$.each(f1, function(key, val) {
+				obj[key] = r1[val];
+			});
+
+			r2 = (/^([^\/]+)?([^\?#]+)?\??([^#]+)?#?(\w*)?/).exec(obj.content);
+			f2 = {
+				'authority': 1,
+				'path': 2,
+				'query': 3,
+				'fragment': 4
+			};
+			$.each(f2, function(key, val) {
+				obj[key] = r2[val];
+			});
+
+			if (obj.authority) {
+				r3 = (/((\w+):?(\w+)?@)?([^\/\?:]+):?(\d+)?/).exec(obj.authority);
+				f3 = {
+					'user': 2,
+					'password': 3,
+					'host': 4,
+					'port': 5
+				};
+				$.each(f3, function(key, val) {
+					obj[key] = r3[val];
+				});
+			}
+
+			if (obj.path) {
+				if (obj.path[obj.path.length - 1] === '/') {
+					obj.dir = obj.path;
+				} else {
+					(function(){
+						var d = obj.path.split('/');
+						obj.filename = d.pop();
+						obj.dir = d.join('/') + '/';
+					}());
+				}
+			}
+
+			if (obj.query) {
+				obj.querys = {};
+				$.each(obj.query.split('&'), function(){
+					var a = this.split('=');
+					if (a.length === 2) {
+						obj.querys[a[0]] = a[1];
+					}
+				});
+			}
+
+			return obj;
 		}
 	};
 	
@@ -24,7 +123,7 @@
 	/**
 	 * rollover
 	 */
-	$.fn.yuga_rollover = function(options){
+	$.fn.yugaRollover = function(options) {
 		var conf = $.extend({
 			suffix: '_on',
 			group: 'a'
@@ -41,14 +140,12 @@
 
 			$.yuga.preloadImg(src_o);
 
-			target.bind('mouseenter.yuga_rollover', function(){
+			target.bind('mouseenter.yugaRollover', function(){
 				img.attr('src', src_o);
-			}).bind('mouseleave.yuga_rollover', function(){
+			}).bind('mouseleave.yugaRollover', function(){
 				img.attr('src', src);
 			});
 		});
 	};
-	$.fn.yuga_groupRollover = function(){
-		return this;
-	};
+
 }(jQuery));
