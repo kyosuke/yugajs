@@ -168,7 +168,6 @@
 		return this.each(function() {
 			var a = $(this);
 			var href = $.yuga.uri(a.attr('href'));
-			console.log(href);
 			var img = a.find('img');
 			if (img.length) {
 				img.each(function(){			
