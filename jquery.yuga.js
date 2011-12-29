@@ -113,9 +113,7 @@
 			} else {
 				base = $.yuga.path2obj(basePath);
 				newPath = base.schema + '://';
-				if (base.authority) {
-					newPath += base.authority;
-				}
+				newPath += base.authority || '';
 				if ($.yuga.isRootRelativePath(path)) {
 					newPath += path;
 				} else {
