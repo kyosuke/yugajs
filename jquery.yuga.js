@@ -201,6 +201,35 @@
 		});
 	};
 
+	/**
+	 * externalLink
+	 */
+	$.fn.yugaExternalLink = function(options) {
+		var conf = $.extend({
+			windowOpen: true,
+			linkClass: 'yuga-externalLink',
+			addIconSrc: '',
+			addIconClass: 'yuga-externalIcon'
+		}, options);
 
+		var base = $.yuga.uri(location.href);
+		var currentDomain = base.schema + '://' + base.host + '/';
+		var $a = $('a[href^="http://"]').not('a[href^="' + currentDomain + '"]');
+		if (conf.windowOpen) {
+			$a.click(function(e) {
+				window.open(this.href, '_blank');
+				e.preventDefault();
+			});
+		}
+		if (conf.linkClass) {
+			$a.addClass(conf.linkClass);
+		}
+		if (conf.addIconSrc) {
+			$a.not(':has(img)').after('<img>', {
+				"src": conf.addIconSrc,
+				"class": conf.addIconClass 
+			});
+		}
+	};
 
 }(jQuery));
