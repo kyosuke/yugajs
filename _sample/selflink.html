@@ -7,8 +7,12 @@
 	<script src="../jquery.yuga.js"></script>
 	<link rel="stylesheet" href="css/noimg.css">
 	<style>
-		a.current {
+		a.yuga-current {
 			background-color: #ebb;
+			padding: 0.5em;
+		}
+		a.yuga-parentsLink {
+			background-color: #bbe;
 			padding: 0.5em;
 		}
 	</style>
@@ -44,8 +48,29 @@
 	<!-- /#sample5 --></div>
 	<div id="sample6">
 		<h2 class="mod-h2">同じページへのリンクにクラス追加 ../_sample/</h2>
-		<a href="../_sample/selflink.html">./selflink.html</a>
+		<a href="../_sample/selflink.html">../_sample/selflink.html</a>
 	<!-- /#sample6 --></div>
+	<div id="sample7">
+		<h2 class="mod-h2">親フォルダへのリンク</h2>
+		<a href="../">../</a>
+	<!-- /#sample7 --></div>
+	<div id="sample8">
+		<h2 class="mod-h2">自フォルダへのリンク</h2>
+		<a href="./">./</a><br>
+		<a href="../_sample/">../_sample/</a>
+	<!-- /#sample8 --></div>
+	<div id="sample9">
+		<h2 class="mod-h2">親フォルダへのリンク画像</h2>
+		<a href="../">
+			<img src="img/btn.png" width="100" height="30" alt="selflink sample">
+		</a>
+	<!-- /#sample9 --></div>
+	<div id="sample10">
+		<h2 class="mod-h2">ルートへのリンクは反応しない</h2>
+		<a href="/">
+			<img src="img/btn.png" width="100" height="30" alt="selflink sample">
+		</a>
+	<!-- /#sample10 --></div>
 <!-- /.mod-all --></div>
 <script>
 $('#sample1 a').yugaSelflink();
@@ -54,10 +79,15 @@ $('#sample3 .roll').yugaRollover();
 $('#sample3 a').yugaSelflink();
 
 $('#sample4 a').yugaSelflink({
-	suffix: '_on'
+	selfLinkImgSuffix: '_on'
 });
 $('#sample5 a').yugaSelflink();
 $('#sample6 a').yugaSelflink();
+$('#sample7 a').yugaSelflink();
+$('#sample8 a').yugaSelflink();
+$('#sample9 a').yugaSelflink();
+$('#sample10 a').yugaSelflink();
+
 </script>
 </body>
 </html>

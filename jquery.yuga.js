@@ -51,7 +51,7 @@
 					'content': 3
 				}
 			});
-			obj.base = path;
+			obj.uri = path;
 			obj = $.yuga.regexpParse({
 				str: obj.content,
 				obj: obj,
@@ -138,10 +138,10 @@
 			group: 'a'
 		}, options);
 		return this.each(function(){
-			var img = $(this);
-			var group = img.parents(conf.group);
-			var target = (group.length) ? group : img;
-			var src = img.attr('src');
+			var $img = $(this);
+			var $group = $img.parents(conf.group);
+			var $target = ($group.length) ? $group : $img;
+			var src = $img.attr('src');
 			if (!src) {
 				return;
 			}
@@ -149,10 +149,10 @@
 
 			$.yuga.preloadImg(src_o);
 
-			target.bind('mouseenter.yugaRollover', function(){
-				img.attr('src', src_o);
+			$target.bind('mouseenter.yugaRollover', function(){
+				$img.attr('src', src_o);
 			}).bind('mouseleave.yugaRollover', function(){
-				img.attr('src', src);
+				$img.attr('src', src);
 			});
 		});
 	};
@@ -162,25 +162,45 @@
 	 */
 	$.fn.yugaSelflink = function(options) {
 		var conf = $.extend({
-			suffix: '_cr',
-			selfLinkClass: 'current'
+			selfLinkClass: 'yuga-current',
+			parentsLinkClass: 'yuga-parentsLink',
+			selfLinkImgSuffix: '_cr',
+			parentsLinkImgSuffix: '_cr',
+			root: '/'
 		}, options);
 		return this.each(function() {
-			var a = $(this);
-			var href = $.yuga.uri(a.attr('href'));
-			var img = a.find('img');
-			if (img.length) {
-				img.each(function(){			
+			var $a = $(this);
+			var $img = $a.find('img');
+			var href = $.yuga.uri($a.attr('href'));
+			var suffix;
+			var root = $.yuga.uri(conf.root);
+
+			if (root.uri === href.uri) {
+				return;
+			}
+
+			if (href.uri === location.href && !href.fragment) {
+				if (conf.selfLinkClass) {
+					$a.addClass(conf.selfLinkClass);
+				}
+				suffix = conf.selfLinkImgSuffix;
+			} else if (0 <= location.href.search(href.uri)) {
+				if (conf.parentsLinkClass) {
+					$a.addClass(conf.parentsLinkClass);
+				}
+				suffix = conf.parentsLinkImgSuffix;
+			}
+			if ($img.length && suffix) {
+				$img.each(function(){			
 					var src = $(this).attr('src');
-					var src_c = src.replace(/\.\w+$/, conf.suffix + '$&');
+					var src_c = src.replace(/\.\w+$/, suffix + '$&');
 					$(this).attr('src', src_c);
 				});
-				a.unbind('.yugaRollover');
-			}
-			if (href.base === location.href) {
-				a.addClass(conf.selfLinkClass);
+				$a.unbind('.yugaRollover');
 			}
 		});
 	};
+
+
 
 }(jQuery));
