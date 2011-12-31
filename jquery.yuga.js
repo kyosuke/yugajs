@@ -104,7 +104,7 @@
 			if ($.yuga.isAbsolutePath(path)) {
 				obj = $.yuga.path2obj(path);
 			} else {
-				base = $.yuga.path2obj(basePath);
+				base = $.yuga.uri(basePath);
 				newPath = base.schema + '://';
 				newPath += base.authority || '';
 				if ($.yuga.isRootRelativePath(path)) {
@@ -202,7 +202,7 @@
 	};
 
 	/**
-	 * externalLink
+	 * externalink
 	 */
 	$.fn.yugaExternalLink = function(options) {
 		var conf = $.extend({

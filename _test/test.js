@@ -258,4 +258,42 @@ test('root relative path', function(){
 
 });
 
+test('relative path with basepath', function(){
+	var relaPath = 'img/sample.jpg';
+	var uri = $.yuga.uri(relaPath, 'http://kyosuke.jp/');
+	var base = $.yuga.uri('http://kyosuke.jp/');
 
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.dir  + relaPath, 'path');
+	equal(uri.dir, base.dir + 'img/', 'dir');
+	equal(uri.filename, 'sample.jpg', 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, base.fragment, 'fragment');
+
+	console.log('relaPath', uri);
+
+});
+
+test('relative path with relative basepath', function(){
+	var relaPath = 'img/sample.jpg';
+	var uri = $.yuga.uri(relaPath, '/');
+	var base = $.yuga.uri('/');
+
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.dir  + relaPath, 'path');
+	equal(uri.dir, base.dir + 'img/', 'dir');
+	equal(uri.filename, 'sample.jpg', 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, base.fragment, 'fragment');
+
+	console.log('relaPath', uri);
+
+});
