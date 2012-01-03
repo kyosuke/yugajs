@@ -9,9 +9,8 @@
  *
  */
 
-
-(function($){
-
+(function(window, $) {
+	var location = window.location;
 	$.yuga = {
 		preloadImg: function(src) {
 			$('<img>', {
@@ -39,7 +38,7 @@
 			});
 			return conf.obj;
 		},
-		path2obj: function(path){
+		path2obj: function(path) {
 			if (!$.yuga.isAbsolutePath(path)) {
 				throw new Error('required absolute path');
 			}
@@ -80,7 +79,7 @@
 				if (obj.path[obj.path.length - 1] === '/') {
 					obj.dir = obj.path;
 				} else {
-					(function(){
+					(function() {
 						var d = obj.path.split('/');
 						obj.filename = d.pop();
 						obj.dir = d.join('/') + '/';
@@ -89,7 +88,7 @@
 			}
 			if (obj.query) {
 				obj.querys = {};
-				$.each(obj.query.split('&'), function(){
+				$.each(obj.query.split('&'), function() {
 					var a = this.split('=');
 					if (a.length === 2) {
 						obj.querys[a[0]] = a[1];
@@ -127,8 +126,7 @@
 			return obj;
 		}
 	};
-	
-	
+
 	/**
 	 * rollover
 	 */
@@ -137,7 +135,7 @@
 			suffix: '_on',
 			group: 'a'
 		}, options);
-		return this.each(function(){
+		return this.each(function() {
 			var $img = $(this);
 			var $group = $img.parents(conf.group);
 			var $target = ($group.length) ? $group : $img;
@@ -149,9 +147,9 @@
 
 			$.yuga.preloadImg(src_o);
 
-			$target.bind('mouseenter.yugaRollover', function(){
+			$target.bind('mouseenter.yugaRollover', function() {
 				$img.attr('src', src_o);
-			}).bind('mouseleave.yugaRollover', function(){
+			}).bind('mouseleave.yugaRollover', function() {
 				$img.attr('src', src);
 			});
 		});
@@ -191,7 +189,7 @@
 				suffix = conf.parentsLinkImgSuffix;
 			}
 			if ($img.length && suffix) {
-				$img.each(function(){			
+				$img.each(function() {
 					var src = $(this).attr('src');
 					var src_c = src.replace(/\.\w+$/, suffix + '$&');
 					$(this).attr('src', src_c);
@@ -227,9 +225,9 @@
 		if (conf.addIconSrc) {
 			$a.not(':has(img)').after('<img>', {
 				"src": conf.addIconSrc,
-				"class": conf.addIconClass 
+				"class": conf.addIconClass
 			});
 		}
 	};
 
-}(jQuery));
+}(this, jQuery));
