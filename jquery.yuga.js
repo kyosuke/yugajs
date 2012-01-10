@@ -11,6 +11,7 @@
 
 (function(window, $) {
 	var location = window.location;
+
 	$.yuga = {
 		preloadImg: function(src) {
 			$('<img>', {
@@ -218,7 +219,7 @@
 			var currentDomain = base.schema + '://' + base.host + '/';
 			var $a = $(this).filter('a[href^="http://"]').not('a[href^="' + currentDomain + '"]');
 			if (conf.windowOpen) {
-				$a.click(function(e) {
+				$a.bind('click.yugaExternalLink', function(e) {
 					window.open(this.href, '_blank');
 					e.preventDefault();
 				});
@@ -248,13 +249,12 @@
 			var $a = $(this);
 			var html = $.support.boxModel ? "html" : "body";
 			var $doc = $(html);
-			$doc.queue([]).stop();
 
-			$a.filter('[href^=#]').not('[href=#]').click(function(e) {
+			$a.filter('[href^=#]').not('[href=#]').bind('click.yugaScroll', function(e) {
 				e.preventDefault();
 				var uri = $.yuga.uri($a.attr('href'));
-				var offset = $('#'+uri.fragment).offset();
-
+				var offset = $('#' + uri.fragment).offset();
+				$doc.queue([]).stop();
 				$doc.animate({
 					scrollTop: offset.top,
 					scrollLeft: offset.left
@@ -271,5 +271,49 @@
 		});
 	};
 
+	/**
+	 * tab
+	 */
+	$.fn.yugaTab = function(options) {
+		var conf = $.extend({
+			activeTabClass: 'yuga-activeTab',
+			activeTabImgSuffix: '_cr'
+		}, options);
+		return this.each(function() {
+			var $tabWrapper = $(this);
+			var $tabNav = $tabWrapper.find('[href^=#]');
+			var $tabContent;
+			var bodylist = [];
+			$tabNav.each(function() {
+				var $a = $(this);
+				var href = $.yuga.uri($a.attr('href'));
+				bodylist.push('#' + href.fragment);
+			});
+			$tabContent = $(bodylist.join(', '));
+			$a.unbind('.yugaScroll');
+			$tabNav.bind('click.yugaTab', function(e) {
+				e.preventDefault();
+				var $a = $(this);
+				var href = $.yuga.uri($a.attr('href'));
+				$tabContent.hide();
+				$('#' + href.fragment).show();
+			});
+			$tabNav.first().trigger('click');
+		});
+	};
+
+	/**
+	 * stripe
+	 */
+	$.fn.yugaStripe = function(options) {
+		var conf = $.extend({
+			oddClass: 'yuga-odd',
+			evenClass: 'yuga-even'
+		});
+		return this.each(function() {
+			$(this).children(':nth-child(odd)').addClass('conf.oddClass');
+			$(this).children(':nth-child(even)').addClass('conf.evenClass');
+		});
+	};
 
 }(this, jQuery));
