@@ -5,7 +5,7 @@
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  *
- * @version  1.9.0 (2.0 beta version)
+ * @version  1.9.1 (2.0 beta version)
  *
  */
 
@@ -173,16 +173,15 @@
 			var suffix;
 			var root = $.yuga.uri(conf.root);
 
-			if (root.uri === href.uri) {
-				return;
-			}
-
 			if (href.uri === location.href && !href.fragment) {
 				if (conf.selfLinkClass) {
 					$a.addClass(conf.selfLinkClass);
 				}
 				suffix = conf.selfLinkImgSuffix;
 			} else if (0 <= location.href.search(href.uri)) {
+				if (root.uri === href.uri) {
+					return;
+				}
 				if (conf.parentsLinkClass) {
 					$a.addClass(conf.parentsLinkClass);
 				}
@@ -209,25 +208,66 @@
 			addIconSrc: '',
 			addIconClass: 'yuga-externalIcon'
 		}, options);
-
-		var base = $.yuga.uri(location.href);
-		var currentDomain = base.schema + '://' + base.host + '/';
-		var $a = $('a[href^="http://"]').not('a[href^="' + currentDomain + '"]');
-		if (conf.windowOpen) {
-			$a.click(function(e) {
-				window.open(this.href, '_blank');
-				e.preventDefault();
-			});
-		}
-		if (conf.linkClass) {
-			$a.addClass(conf.linkClass);
-		}
-		if (conf.addIconSrc) {
-			$a.not(':has(img)').after('<img>', {
-				"src": conf.addIconSrc,
-				"class": conf.addIconClass
-			});
-		}
+		return this.each(function() {
+			var base = $.yuga.uri(location.href);
+			var currentDomain = base.schema + '://' + base.host + '/';
+			var $a = $(this).filter('a[href^="http://"]').not('a[href^="' + currentDomain + '"]');
+			if (conf.windowOpen) {
+				$a.click(function(e) {
+					window.open(this.href, '_blank');
+					e.preventDefault();
+				});
+			}
+			if (conf.linkClass) {
+				$a.addClass(conf.linkClass);
+			}
+			if (conf.addIconSrc) {
+				$a.not(':has(img)').after('<img>', {
+					"src": conf.addIconSrc,
+					"class": conf.addIconClass
+				});
+			}
+		});
 	};
+
+	/**
+	 * scroll
+	 */
+	$.fn.yugaScroll = function(options) {
+		var conf = $.extend({
+			changeHash: true,
+			easing: 'swing',
+			duration: 4000
+		}, options);
+		return this.each(function() {
+			var $a = $(this);
+			var html = $.support.boxModel ? "html" : "body";
+
+			$a.filter('[href^=#]').not('[href=#]').click(function(e) {
+				e.preventDefault();
+				var uri = $.yuga.uri($a.attr('href'));
+				var offset = $('#'+uri.fragment).offset();
+				var doc = $(html);
+				doc.animate({
+					scrollTop: offset.top,
+					scrollLeft: offset.left
+				}, {
+					easing: conf.easing,
+					duration: conf.duration,
+					step: function(now, o) {
+						console.log(now, o);
+					},
+					complete: function() {
+						if (conf.changeHash) {
+							console.log(uri.uri);
+							location.href = uri.uri;
+						}
+					}
+				});
+			});
+
+		});
+	};
+
 
 }(this, jQuery));
