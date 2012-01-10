@@ -23,6 +23,9 @@
 		isRootRelativePath: function(path) {
 			return path[0] === '/';
 		},
+		isHashPath: function(path) {
+			return path[0] === '#';
+		},
 		regexpParse: function(options) {
 			var conf = $.extend({
 				str: '',
@@ -109,7 +112,9 @@
 				if ($.yuga.isRootRelativePath(path)) {
 					newPath += path;
 				} else {
-					newPath += base.dir + path;
+					newPath += base.dir;
+					newPath += $.yuga.isHashPath(path) ? base.filename : '';
+					newPath += path;
 					newPath = newPath.replace(/\/\.\//g, '/');
 					while ((/\/\.\.\//).test(newPath)) {
 						newPath = newPath.replace(/\/[^\/]+\/\.\.\//, '/');
@@ -118,7 +123,7 @@
 				if (base.query) {
 					newPath += '?' + base.query;
 				}
-				if (base.fragment) {
+				if (base.fragment && path.match('#') === -1) {
 					newPath += '#' + base.fragment;
 				}
 				obj = $.yuga.path2obj(newPath);
@@ -237,35 +242,32 @@
 		var conf = $.extend({
 			changeHash: true,
 			easing: 'swing',
-			duration: 4000
+			duration: 400
 		}, options);
 		return this.each(function() {
 			var $a = $(this);
 			var html = $.support.boxModel ? "html" : "body";
+			var $doc = $(html);
+			$doc.queue([]).stop();
 
 			$a.filter('[href^=#]').not('[href=#]').click(function(e) {
 				e.preventDefault();
 				var uri = $.yuga.uri($a.attr('href'));
 				var offset = $('#'+uri.fragment).offset();
-				var doc = $(html);
-				doc.animate({
+
+				$doc.animate({
 					scrollTop: offset.top,
 					scrollLeft: offset.left
 				}, {
 					easing: conf.easing,
 					duration: conf.duration,
-					step: function(now, o) {
-						console.log(now, o);
-					},
 					complete: function() {
 						if (conf.changeHash) {
-							console.log(uri.uri);
 							location.href = uri.uri;
 						}
 					}
 				});
 			});
-
 		});
 	};
 

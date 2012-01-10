@@ -179,6 +179,46 @@ test('relative path', function(){
 
 });
 
+test('hashpath', function(){
+	var relaPath = '#sample';
+	var uri = $.yuga.uri(relaPath);
+	var base = $.yuga.uri(location.href);
+
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.path, 'path');
+	equal(uri.dir, base.dir, 'dir');
+	equal(uri.filename, base.filename, 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, 'sample', 'fragment');
+
+	console.log('relaPath', uri);
+
+});
+
+test('hashpath2', function(){
+	var relaPath = '#next';
+	var uri = $.yuga.uri(relaPath, location.href + '#base');
+	var base = $.yuga.uri(location.href + '#base');
+
+	equal(uri.schema, base.schema, 'schema');
+	equal(uri.user, base.user, 'user');
+	equal(uri.password, base.password, 'password');
+	equal(uri.host, base.host, 'host');
+	equal(uri.port, base.port, 'port');
+	equal(uri.path, base.path, 'path');
+	equal(uri.dir, base.dir, 'dir');
+	equal(uri.filename, base.filename, 'filename');
+	equal(uri.query, base.query, 'query');
+	equal(uri.fragment, 'next', 'fragment');
+
+	console.log('relaPath', uri);
+
+});
+
 test('relative path : ./', function(){
 	var relaPath = './img/sample.jpg';
 	var uri = $.yuga.uri(relaPath);
