@@ -18,15 +18,6 @@
 				src: src
 			});
 		},
-		isAbsolutePath: function(path) {
-			return (/^(\w+):/).test(path);
-		},
-		isRootRelativePath: function(path) {
-			return path[0] === '/';
-		},
-		isHashPath: function(path) {
-			return path[0] === '#';
-		},
 		regexpParse: function(options) {
 			var conf = $.extend({
 				str: '',
@@ -42,8 +33,55 @@
 			});
 			return conf.obj;
 		},
+		uri: function(path, basePath) {
+			var obj, base, newPath;
+			basePath = basePath || location.href;
+			if ($.yuga.uri.isAbsolutePath(path)) {
+				obj = $.yuga.uri.path2obj(path);
+			} else {
+				base = $.yuga.uri(basePath);
+				newPath = base.schema + '://';
+				newPath += base.authority || '';
+				if ($.yuga.uri.isRootRelativePath(path)) {
+					newPath += path;
+				} else {
+					newPath += base.dir;
+					if ($.yuga.uri.isHashPath(path)) {
+						newPath += base.filename;
+					}
+					newPath += path;
+					newPath = $.yuga.uri.removeDotSegments(newPath);
+				}
+				if (base.query) {
+					newPath += '?' + base.query;
+				}
+				if (base.fragment && path.match('#') === -1) {
+					newPath += '#' + base.fragment;
+				}
+				obj = $.yuga.uri.path2obj(newPath);
+			}
+			return obj;
+		}
+	};
+	$.extend($.yuga.uri, {
+		isAbsolutePath: function(path) {
+			return (/^(\w+):/).test(path);
+		},
+		isRootRelativePath: function(path) {
+			return path[0] === '/';
+		},
+		isHashPath: function(path) {
+			return path[0] === '#';
+		},
+		removeDotSegments: function(path) {
+			path = path.replace(/\/\.\//g, '/');
+			while ((/\/\.\.\//).test(path)) {
+				path = path.replace(/\/[^\/]+\/\.\.\//, '/');
+			}
+			return path;
+		},
 		path2obj: function(path) {
-			if (!$.yuga.isAbsolutePath(path)) {
+			if (!$.yuga.uri.isAbsolutePath(path)) {
 				throw new Error('required absolute path');
 			}
 			var obj = $.yuga.regexpParse({
@@ -100,38 +138,8 @@
 				});
 			}
 			return obj;
-		},
-		uri: function(path, basePath) {
-			var obj, base, newPath;
-			basePath = basePath || location.href;
-			if ($.yuga.isAbsolutePath(path)) {
-				obj = $.yuga.path2obj(path);
-			} else {
-				base = $.yuga.uri(basePath);
-				newPath = base.schema + '://';
-				newPath += base.authority || '';
-				if ($.yuga.isRootRelativePath(path)) {
-					newPath += path;
-				} else {
-					newPath += base.dir;
-					newPath += $.yuga.isHashPath(path) ? base.filename : '';
-					newPath += path;
-					newPath = newPath.replace(/\/\.\//g, '/');
-					while ((/\/\.\.\//).test(newPath)) {
-						newPath = newPath.replace(/\/[^\/]+\/\.\.\//, '/');
-					}
-				}
-				if (base.query) {
-					newPath += '?' + base.query;
-				}
-				if (base.fragment && path.match('#') === -1) {
-					newPath += '#' + base.fragment;
-				}
-				obj = $.yuga.path2obj(newPath);
-			}
-			return obj;
 		}
-	};
+	});
 
 	/**
 	 * rollover
@@ -288,13 +296,15 @@
 				var $a = $(this);
 				var href = $.yuga.uri($a.attr('href'));
 				bodylist.push('#' + href.fragment);
+				$a.unbind('.yugaScroll');
 			});
 			$tabContent = $(bodylist.join(', '));
-			$a.unbind('.yugaScroll');
 			$tabNav.bind('click.yugaTab', function(e) {
 				e.preventDefault();
 				var $a = $(this);
 				var href = $.yuga.uri($a.attr('href'));
+				$tabNav.removeClass(conf.activeTabClass);
+				$a.addClass(conf.activeTabClass);
 				$tabContent.hide();
 				$('#' + href.fragment).show();
 			});
@@ -309,10 +319,10 @@
 		var conf = $.extend({
 			oddClass: 'yuga-odd',
 			evenClass: 'yuga-even'
-		});
+		}, options);
 		return this.each(function() {
-			$(this).children(':nth-child(odd)').addClass('conf.oddClass');
-			$(this).children(':nth-child(even)').addClass('conf.evenClass');
+			$(this).children(':nth-child(odd)').addClass(conf.oddClass);
+			$(this).children(':nth-child(even)').addClass(conf.evenClass);
 		});
 	};
 

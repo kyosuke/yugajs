@@ -3,17 +3,17 @@
 module('URI');
 
 test('isAbsolutePath', function(){
-	ok($.yuga.isAbsolutePath('http://kyosuke.jp/'));
-	ok($.yuga.isAbsolutePath('file:///Users/kyosuke/index.html'));
-	ok(!$.yuga.isAbsolutePath('/index.html'));
-	ok(!$.yuga.isAbsolutePath('img/sample.jpg'));
+	ok($.yuga.uri.isAbsolutePath('http://kyosuke.jp/'));
+	ok($.yuga.uri.isAbsolutePath('file:///Users/kyosuke/index.html'));
+	ok(!$.yuga.uri.isAbsolutePath('/index.html'));
+	ok(!$.yuga.uri.isAbsolutePath('img/sample.jpg'));
 });
 
 test('isRootRelativePath', function() {
-	ok(!$.yuga.isRootRelativePath('http://kyosuke.jp/'));
-	ok(!$.yuga.isRootRelativePath('file:///Users/kyosuke/index.html'));
-	ok($.yuga.isRootRelativePath('/index.html'));
-	ok(!$.yuga.isRootRelativePath('img/sample.jpg'));
+	ok(!$.yuga.uri.isRootRelativePath('http://kyosuke.jp/'));
+	ok(!$.yuga.uri.isRootRelativePath('file:///Users/kyosuke/index.html'));
+	ok($.yuga.uri.isRootRelativePath('/index.html'));
+	ok(!$.yuga.uri.isRootRelativePath('img/sample.jpg'));
 });
 
 test('regexpParse : empty', function(){
@@ -55,7 +55,7 @@ test('regexpParse', function(){
 });
 
 test('path2obj : http', function() {
-	var uri = $.yuga.path2obj('http://kyosuke.jp/yugajs/index.html#top');
+	var uri = $.yuga.uri.path2obj('http://kyosuke.jp/yugajs/index.html#top');
 	ok(uri);
 	equal(uri.schema, 'http', 'schema');
 	equal(uri.user, undefined, 'user');
@@ -71,7 +71,7 @@ test('path2obj : http', function() {
 });
 
 test('path2obj : http 2', function() {
-	var uri = $.yuga.path2obj('http://user:pw@kyosuke.jp:8080/api/test?a=1&b=2&c=test#hogehoge');
+	var uri = $.yuga.uri.path2obj('http://user:pw@kyosuke.jp:8080/api/test?a=1&b=2&c=test#hogehoge');
 	ok(uri);
 	equal(uri.schema, 'http', 'schema');
 	equal(uri.user, 'user', 'user');
@@ -90,7 +90,7 @@ test('path2obj : http 2', function() {
 });
 
 test('path2obj : file', function() {
-	var uri = $.yuga.path2obj('file:///Users/kyosuke/index.html');
+	var uri = $.yuga.uri.path2obj('file:///Users/kyosuke/index.html');
 	ok(uri);
 	equal(uri.schema, 'file', 'schema');
 	equal(uri.user, undefined, 'user');
