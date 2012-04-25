@@ -20,14 +20,33 @@
 //-----------------------------------------------
 
 jQuery(function($){
-	// rollover
+	var $a = $('a');
+
+	// ロールオーバー
 	$('.btn, .allbtn img').yugaRollover({
 		suffix: '_on',
 		group: '.btngroup'
 	});
-	
-	$('body a').yugaSelflink({
+
+	// 現在のページと親ディレクトリへのリンク
+	$a.yugaSelflink({
 		suffix: '_cr',
 		selfLinkClass: 'current'
 	});
+
+	// 外部リンクは別ウインドウを設定
+	$a.yugaExternalLink({
+		externalClass: 'externalLink'
+	});
+
+	// 画像へ直リンクするとcolorboxで表示(jquery.colorbox-min.js利用)
+	$('a[href$=".jpg"], a[href$=".gif"], a[href$=".png"]').not('a[href*="?"]').colorbox();
+
+	// ページ内リンクはするするスクロール
+	$a.yugaScroll({
+		
+		duration: 4000
+	});
+
+
 });

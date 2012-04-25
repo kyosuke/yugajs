@@ -255,7 +255,7 @@
 		}, options);
 		return this.each(function() {
 			var $a = $(this);
-			var html = $.support.boxModel ? "html" : "body";
+			var html = $.support.boxModel ? navigator.appName.match(/Opera/) ? 'html' : 'html,body' : 'body';
 			var $doc = $(html);
 
 			$a.filter('[href^=#]').not('[href=#]').bind('click.yugaScroll', function(e) {

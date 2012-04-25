@@ -20,6 +20,15 @@
 //-----------------------------------------------
 
 jQuery(function($){
+	var $a = $('a');
 	$('img.yuga-roll').yugaRollover();
-	$('a.yuga-nav').yugaSelflink();
+	$('.yuga-nav a').yugaSelflink();
+	$a.yugaExternalLink();
+	$a.yugaScroll();
+
+	$('.yuga-tabNav').yugaTab();
+	$('ul, ol, table, tbody').yugaStripe();
+
+	$('a[href$=".jpg"], a[href$=".gif"], a[href$=".png"]').not('a[href*="?"]').colorbox();
+
 });
